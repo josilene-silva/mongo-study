@@ -37,6 +37,18 @@ app.get('/person', async (req, res) => {
     }
 });
 
+app.get('/person/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const person = await Person.findOne({ _id: id });
+
+        if (!person) return res.status(404).json({ message: "Usuário não encontrado!" });
+        return res.status(200).json(person);
+    } catch (error) {
+        return res.status(500).json({ error: error });
+    }
+});
+
 app.get('/', (req, res) => {
     return res.json({ message: "Hello" });
 });
