@@ -3,11 +3,30 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 
+const Person = require('./models/Person');
+
 app.use(express.urlencoded({
     extended: true
 }));
 
 app.use(express.json());
+
+app.post('/person', async (req, res) => {
+    const { name, salary, approved } = req.body;
+
+    if (!name) return res.status(422).json({ message: 'Name is required' });
+
+    const person = { name, salary, approved };
+
+    try {
+        await Person.create(person);
+
+        return res.status(201).json({ message: "Person entered successfully" });
+
+    } catch (error) {
+        return res.status(500).json({ error: error });
+    }
+});
 
 app.get('/', (req, res) => {
     return res.json({ message: "Hello" });
