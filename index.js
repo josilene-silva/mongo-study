@@ -49,6 +49,22 @@ app.get('/person/:id', async (req, res) => {
     }
 });
 
+app.patch('/person/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, salary, approved } = req.body;
+
+    const person = { name, salary, approved };
+
+    try {
+        const updatedPerson = await Person.updateOne({ _id: id }, person);
+
+        if (updatedPerson.matchedCount === 0) return res.status(404).json({ message: "Usuário não encontrado!" });
+        return res.status(200).json(person);
+    } catch (error) {
+        return res.status(500).json({ error: error });
+    }
+});
+
 app.get('/', (req, res) => {
     return res.json({ message: "Hello" });
 });
