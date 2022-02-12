@@ -42,7 +42,7 @@ app.get('/person/:id', async (req, res) => {
     try {
         const person = await Person.findOne({ _id: id });
 
-        if (!person) return res.status(404).json({ message: "Usuário não encontrado!" });
+        if (!person) return res.status(404).json({ message: "User not found!" });
         return res.status(200).json(person);
     } catch (error) {
         return res.status(500).json({ error: error });
@@ -58,8 +58,23 @@ app.patch('/person/:id', async (req, res) => {
     try {
         const updatedPerson = await Person.updateOne({ _id: id }, person);
 
-        if (updatedPerson.matchedCount === 0) return res.status(404).json({ message: "Usuário não encontrado!" });
+        if (updatedPerson.matchedCount === 0) return res.status(404).json({ message: "User not found!" });
         return res.status(200).json(person);
+    } catch (error) {
+        return res.status(500).json({ error: error });
+    }
+});
+
+app.delete('/person/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const person = await Person.findOne({ _id: id });
+
+        if (!person) return res.status(404).json({ message: "User not found!" });
+
+        await Person.deleteOne({ _id: id });
+
+        return res.status(200).json({ message: "User successfully removed" });
     } catch (error) {
         return res.status(500).json({ error: error });
     }
