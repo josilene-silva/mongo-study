@@ -28,6 +28,15 @@ app.post('/person', async (req, res) => {
     }
 });
 
+app.get('/person', async (req, res) => {
+    try {
+        const person = await Person.find();
+        return res.status(200).json(person);
+    } catch (error) {
+        return res.status(500).json({ error: error });
+    }
+});
+
 app.get('/', (req, res) => {
     return res.json({ message: "Hello" });
 });
